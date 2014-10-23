@@ -1,0 +1,38 @@
+{
+  "name": "blockspring",
+  "version": "0.0.1",
+  "description": "Blockspring javascript library for creating blocks",
+  "main": "index.js",
+  "author": "Blockspring <founders@blockspring.com>",
+  "contributors": [
+    {
+      "name": "Jason Tokoph",
+      "email": "jason@blockspring.com"
+    },
+    {
+      "name": "Paul Katsen",
+      "email": "paul@blockspring.com"
+    },
+    {
+      "name": "Don Pinkus",
+      "email": "don@blockspring.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blockspring/blockspring.js"
+  },
+  "bugs": {
+    "url": "https://github.com/blockspring/blockspring.js/issues"
+  },
+  "keywords": [
+    "blockspring"
+  ],
+  "dependencies": {
+      "mime": "^1.2.11",
+      "optimist": "^0.6.1",
+      "request": "^2.45.0"
+  },
+  "analyze": true,
+   "license": "MIT"
+}
