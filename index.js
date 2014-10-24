@@ -11,11 +11,13 @@ module.exports = {
       throw "BLOCKSPRING_API_KEY environment variable not set";
     }
 
+    var blockspring_url = process.env.BLOCKSPRING_URL || 'https://sender.blockspring.com'
+    
     var block_parts = block.split('/');
     var block_id = block_parts[block_parts.length - 1];
 
     request.post({
-      url: "https://sender.blockspring.com/api_v1/blocks/" + block_id + "?api_key=" + api_key,
+      url: blockspring_url + "/api_v2/blocks/" + block + "?api_key=" + api_key,
       form: data
     },
     function(err, response, body) {
