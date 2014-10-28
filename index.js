@@ -139,10 +139,11 @@ module.exports = {
 
           var num_files = 0;
           var num_written_files = 0;
+          var are_all_inputs_processed = false;
 
           var checkForEnd = function(){
             num_written_files++;
-            if (num_files == num_written_files){
+            if (are_all_inputs_processed && num_files == num_written_files){
               callback.call();
             }
           }
@@ -209,6 +210,10 @@ module.exports = {
               request.params[var_name] = params[var_name];
             }
           });
+
+          // tmp lib might fire callback before looping through all inputs
+          // so we need to keep track of when we finish
+          are_all_inputs_processed = true;
 
           if (num_files == num_written_files){
             callback.call();
