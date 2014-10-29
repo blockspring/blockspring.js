@@ -56,7 +56,14 @@ module.exports = {
 
     var request = {
       params: {},
-      errors: []
+      stdin: '',
+      errors: [],
+      getErrors: function(){
+        return this.errors;
+      },
+      addError: function(error){
+        this.errors.push(error);
+      }
     };
 
     var response = {
@@ -154,6 +161,7 @@ module.exports = {
 
           if (!(("_blockspring_spec" in params) && params._blockspring_spec)){
             request.params = params;
+            callback.call();
             return;
           }
 
@@ -176,8 +184,8 @@ module.exports = {
                 toType(params[var_name]) == "object" &&
                 "filename" in params[var_name] &&
                 params[var_name].filename &&
-                (("data" in params[var_name]) && params[var_name].data) ||
-                  ("url" in params[var_name]) && params[var_name].url))
+                ((("data" in params[var_name]) && params[var_name].data) ||
+                  (("url" in params[var_name]) && params[var_name].url))
             ) {
               num_files++;
               tmp.tmpName({postfix: '-' + params[var_name].filename }, function _tempNameGenerated(err, tmp_name) {
