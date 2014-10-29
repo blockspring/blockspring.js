@@ -1,6 +1,6 @@
 {
   "name": "blockspring",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Blockspring javascript library for creating blocks",
   "main": "index.js",
   "author": "Blockspring <founders@blockspring.com>",
