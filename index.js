@@ -87,9 +87,9 @@ module.exports = {
           if (err) throw err;
 
           this.result[name] = {
-            filename: filename,
-            mimeType: mime.lookup(filepath),
-            data: data
+            "filename": filename,
+            "content-type": mime.lookup(filepath),
+            "data": data
           };
 
           if (callback) {
