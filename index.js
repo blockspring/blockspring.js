@@ -189,7 +189,6 @@ module.exports = {
           return parsed_results;
         } else {
           parsed_results["_headers"] = response.headers
-          return this.parse(parsed_results, true, callback)
         }
       } catch(e) {
         if (callback){
@@ -197,6 +196,8 @@ module.exports = {
         }
         return body;
       };
+
+      return this.parse(parsed_results, true, callback)
     }.bind(this));
   },
 
