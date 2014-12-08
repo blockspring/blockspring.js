@@ -10,7 +10,7 @@ var endCalled = false;
 
 module.exports = {
   parse: function(input_params, json_parsed, callback){
-    json_parsed = typeof json_parsed !== 'undefined' || json_parsed === null ? json_parsed : false;
+    json_parsed = typeof json_parsed !== 'undefined' || json_parsed === null ? json_parsed : true;
 
     var request = new Request()
 
