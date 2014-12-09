@@ -5,9 +5,6 @@ var mime = require('mime');
 var requests = require("request");
 var tmp = require("tmp");
 
-var libUsed = false;
-var endCalled = false;
-
 module.exports = {
   parse: function(input_params, json_parsed, callback){
     json_parsed = typeof json_parsed !== 'undefined' || json_parsed === null ? json_parsed : true;
@@ -137,13 +134,10 @@ module.exports = {
 
     requests.post({
       url: blockspring_url + "/api_v2/blocks/" + block + "?api_key=" + api_key,
-      form: data
+      body: data,
+      json: true
     },
     function(err, response, body) {
-      try {
-        body = JSON.parse(body);
-      } catch(e) {};
-
       if (callback){
         callback(body);
       }
@@ -176,19 +170,18 @@ module.exports = {
 
     requests.post({
       url: blockspring_url + "/api_v2/blocks/" + block + "?api_key=" + api_key,
-      form: data
+      body: data,
+      json: true
     },
     function(err, response, body) {
       try {
-        var parsed_results = JSON.parse(body);
-
-        if (!(toType( parsed_results ) == "object")){
+        if (!(toType( body ) == "object")){
           if (callback){
-            callback(parsed_results);
+            callback(body);
           }
-          return parsed_results;
+          return body;
         } else {
-          parsed_results["_headers"] = response.headers
+          body["_headers"] = response.headers;
         }
       } catch(e) {
         if (callback){
@@ -196,20 +189,12 @@ module.exports = {
         }
         return body;
       };
-
-      return this.parse(parsed_results, true, callback)
+      return this.parse(body, true, callback)
     }.bind(this));
   },
 
 
   define: function(block) {
-    // make sure we print out data if we have received some
-    process.on('exit', function(code) {
-      if (libUsed === true && endCalled === false) {
-        response.end();
-      }
-    });
-
     var processStdin = function(callback) {
       if (process.stdin.isTTY) {
         var request = new Request;
@@ -286,7 +271,6 @@ function Response() {
   };
 
   this.addOutput = function(name, value, callback) {
-    libUsed = true;
     this.result[name] = value;
     if(callback) {
       process.nextTick(callback);
@@ -295,7 +279,6 @@ function Response() {
   };
 
   this.addFileOutput = function(name, filepath, callback) {
-    libUsed = true;
     var filename = path.basename(filepath);
 
     fs.readFile(filepath, { encoding: 'base64' }, function (err, data) {
@@ -316,7 +299,6 @@ function Response() {
   };
 
   this.addErrorOutput = function(title, message, callback) {
-    libUsed = true;
     message = typeof message !== 'undefined' ? message : null;
 
     this.result._errors.push({
@@ -331,8 +313,6 @@ function Response() {
   };
 
   this.end = function() {
-    libUsed = true;
-    endCalled = true;
     console.log(JSON.stringify(this.result));
   };
 }
