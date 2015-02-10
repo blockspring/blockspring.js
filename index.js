@@ -108,72 +108,96 @@ module.exports = {
       callback(request);
     }
   },
-  run: function(block, data, api_key, callback) {
-    // allow data and api_key to be optional
+  run: function(block, data, options, callback) {
+    // checks in case callback was provided in place of data or options.
     if (typeof data === 'function') {
+      // allow data and api_key to be optional
       callback = data;
       data = {};
-      api_key = null;
-    }
-    // allow api_key to be optional, but keep callback as last argument
-    else if (typeof api_key === 'function') {
-      callback = api_key;
-      api_key = null;
+    } else if (typeof options === 'function') {
+      // allow api_key to be optional, but keep callback as last argument
+      callback = options;
+    } else if (typeof options === "string"){
+      options = {
+        api_key: options,
+        cache: false,
+        expiry: null
+      }
     }
 
+    // checks in case callback was provided in place of data or options.
+
     data = typeof data !== 'undefined' || data === null ? data : {};
-    api_key = typeof api_key !== 'undefined' ? api_key : null;
+    options = typeof options !== 'undefined' ? options : { api_key: null, cache: false, expiry: null }
+
+    if (!("api_key" in options)){
+      options.api_key = null;
+    }
 
     if (!(toType( data ) == "object")){
       throw "your data needs to be an object.";
     }
 
-    var api_key = api_key || process.env.BLOCKSPRING_API_KEY || "";
+    var api_key = options.api_key || process.env.BLOCKSPRING_API_KEY || "";
+    var cache = ("cache" in options) ? options.cache : false;
+    var expiry = ("expiry" in options) ? options.expiry : null;
+
     var blockspring_url = process.env.BLOCKSPRING_URL || 'https://sender.blockspring.com'
     var block = block.split("/").slice(-1)[0];
 
     requests.post({
-      url: blockspring_url + "/api_v2/blocks/" + block + "?api_key=" + api_key,
+      url: blockspring_url + "/api_v2/blocks/" + block + "?api_key=" + api_key + "&cache=" + cache + "&expiry=" + expiry,
       body: data,
       json: true
-    },
-    function(err, response, body) {
+    }, function(err, response, body) {
       if (callback){
         callback(body);
       }
     });
   },
 
-  runParsed: function(block, data, api_key, callback) {
-    // allow data and api_key to be optional
+  runParsed: function(block, data, options, callback) {
+    // checks in case callback was provided in place of data or options.
     if (typeof data === 'function') {
+      // allow data and api_key to be optional
       callback = data;
       data = {};
-      api_key = null;
-    }
-    // allow api_key to be optional, but keep callback as last argument
-    else if (typeof api_key === 'function') {
-      callback = api_key;
-      api_key = null;
+    } else if (typeof options === 'function') {
+      // allow options to be optional, but keep callback as last argument
+      callback = options;
+    } else if (typeof options === "string"){
+      options = {
+        api_key: options,
+        cache: false,
+        expiry: null
+      }
     }
 
+    // checks in case callback was provided in place of data or options.
+
     data = typeof data !== 'undefined' || data === null ? data : {};
-    api_key = typeof api_key !== 'undefined' ? api_key : null;
+    options = typeof options !== 'undefined' ? options : { api_key: null, cache: false, expiry: null }
+
+    if (!("api_key" in options)){
+      options.api_key = null;
+    }
 
     if (!(toType( data ) == "object")){
       throw "your data needs to be an object.";
     }
 
-    var api_key = api_key || process.env.BLOCKSPRING_API_KEY || "";
+    var api_key = options.api_key || process.env.BLOCKSPRING_API_KEY || "";
+    var cache = ("cache" in options) ? options.cache : false;
+    var expiry = ("expiry" in options) ? options.expiry : null;
+
     var blockspring_url = process.env.BLOCKSPRING_URL || 'https://sender.blockspring.com'
     var block = block.split("/").slice(-1)[0];
 
     requests.post({
-      url: blockspring_url + "/api_v2/blocks/" + block + "?api_key=" + api_key,
+      url: blockspring_url + "/api_v2/blocks/" + block + "?api_key=" + api_key + "&cache=" + cache + "&expiry=" + expiry,
       body: data,
       json: true
-    },
-    function(err, response, body) {
+    }, function(err, response, body) {
       try {
         if (!(toType( body ) == "object")){
           if (callback){
